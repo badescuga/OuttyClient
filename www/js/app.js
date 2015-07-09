@@ -88,3 +88,5 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
 });
 
+// var sio = require('../../socket.io-client');
+// console.log(sio === null ? "NULL":"NU E NULL");
