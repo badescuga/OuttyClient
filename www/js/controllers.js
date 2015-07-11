@@ -1,6 +1,11 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
+.controller('LoginCtrl', function($scope) {
+//  $scope.chat = Chats.get($stateParams.chatId);
+//alert('LOGIN CTRL');
+})
+
 .controller('DashCtrl', function($scope) {})
 
 .controller('ChatsCtrl', function($scope, Chats) {
