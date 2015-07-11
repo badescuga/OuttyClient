@@ -1,3 +1,4 @@
+/* global angular */
 angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function($scope) {})
@@ -22,6 +23,7 @@ angular.module('starter.controllers', [])
 })
 
 .controller('AccountCtrl', function($scope) {
+//  alert('daaaaa');
   $scope.settings = {
     enableFriends: true
   };
