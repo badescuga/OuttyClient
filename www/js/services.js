@@ -49,23 +49,54 @@ angular.module('starter.services', ['ngOpenFB'])
   };
 })
   .factory('FBFactory', function (ngFB) {
-      // Defaults to sessionStorage for storing the Facebook token 
-  //ngFB.init({ appId: 'YOUR_FB_APP_ID' });
+  // Defaults to sessionStorage for storing the Facebook token 
+  ngFB.init({ appId: '880420071993231' });
   //  Uncomment the line below to store the Facebook token in localStorage instead of sessionStorage 
   //  openFB.init({appId: 'YOUR_FB_APP_ID', tokenStore: window.localStorage}); 
-  
+
   console.log("init fb factory");
   return {
-    a : 3
-    // login: function () {
+    testVal: 3,
+    login: function (callback) {
 
-    //   ngFB.login({ scope: 'email,read_stream,publish_actions' }).then(
-    //     function (response) {
-    //       alert('Facebook login succeeded, got access token: ' + response.authResponse.accessToken);
-    //     },
-    //     function (error) {
-    //       alert('Facebook login failed: ' + error);
-    //     });
-    // }
+      ngFB.login({ scope: 'email,public_profile,user_friends' }).then(
+        function (response) {
+          alert("facebook login succesful, response: " + JSON.stringify(response));
+          //   alert('Facebook login succeeded, got access token: ' + response.authResponse.accessToken);
+          callback(null);
+        },
+        function (error) {
+          //  alert('Facebook login failed: ' + error);
+          callback(error);
+        });
+    },
+    getUser: function (callback) {
+      ngFB.api({ path: '/me' })
+        .then(function (res) {
+    //     angular.extend(me, res);
+        callback(null, res);
+      }
+        , function (err) {
+          // error
+          callback(err);
+        });
+    } ,
+     getUserPhoto: function (callback) {
+      ngFB.api({ path: '/me/picture',
+        params:{
+          redirect:false,
+          height:64,
+          width:64
+        } })
+        .then(function (res) {
+   //     angular.extend(me, {picture:res.data.url});
+        callback(null, res);
+      }
+        , function (err) {
+          // error
+          callback(err);
+        });
+    }
+
   };
 });
