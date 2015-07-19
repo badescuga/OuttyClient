@@ -1,9 +1,10 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
-.controller('LoginCtrl', function($scope) {
+.controller('LoginCtrl', function($scope,FBFactory) {
 //  $scope.chat = Chats.get($stateParams.chatId);
 //alert('LOGIN CTRL');
+console.log("--- got FBFactory --- a = "+FBFactory.a);
 })
 
 .controller('DashCtrl', function($scope) {})
