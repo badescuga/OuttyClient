@@ -1,5 +1,26 @@
 angular.module('starter.services', ['ngOpenFB'])
 
+  .factory('LocalStorage', function () {
+    
+  return {
+    setFacebookUserData: function (data) {
+      window.localStorage.setItem('facebookData', JSON.stringify(data));
+    }
+    ,
+     getFacebookUserData: function (data) {
+     return JSON.parse(window.localStorage.getItem('facebookData'));
+    }
+    ,
+    setFacebookUserPhotoData: function (data) {
+      window.localStorage.setItem('facebookPhotoData', JSON.stringify(data));
+    },
+     getFacebookUserPhotoData: function (data) {
+    return JSON.parse(window.localStorage.getItem('facebookPhotoData'));
+    }
+
+  }
+})
+
   .factory('Chats', function () {
   // Might use a resource here that returns a JSON array
 
@@ -48,11 +69,12 @@ angular.module('starter.services', ['ngOpenFB'])
     }
   };
 })
-  .factory('FBFactory', function (ngFB) {
+  .factory('FBFactory', function (ngFB, LocalStorage) {
   // Defaults to sessionStorage for storing the Facebook token 
   ngFB.init({ appId: '880420071993231' });
   //  Uncomment the line below to store the Facebook token in localStorage instead of sessionStorage 
   //  openFB.init({appId: 'YOUR_FB_APP_ID', tokenStore: window.localStorage}); 
+//console.log("getting data from local storage: "+JSON.stringify(LocalStorage.getFacebookUserData()));
 
   console.log("init fb factory");
   return {
@@ -61,42 +83,68 @@ angular.module('starter.services', ['ngOpenFB'])
 
       ngFB.login({ scope: 'email,public_profile,user_friends' }).then(
         function (response) {
-          alert("facebook login succesful, response: " + JSON.stringify(response));
+          console.log("facebook login succesful, response: " + JSON.stringify(response));
           //   alert('Facebook login succeeded, got access token: ' + response.authResponse.accessToken);
-          callback(null);
-        },
-        function (error) {
-          //  alert('Facebook login failed: ' + error);
-          callback(error);
-        });
-    },
-    getUser: function (callback) {
-      ngFB.api({ path: '/me' })
+         
+         ///////////////////getting user data
+        ngFB.api({ path: '/me' })
         .then(function (res) {
-    //     angular.extend(me, res);
-        callback(null, res);
+     LocalStorage.setFacebookUserData(res);
       }
         , function (err) {
           // error
-          callback(err);
         });
-    } ,
-     getUserPhoto: function (callback) {
-      ngFB.api({ path: '/me/picture',
+        //////////// getting user photo data
+        ngFB.api({ path: '/me/picture',
         params:{
           redirect:false,
           height:64,
           width:64
         } })
         .then(function (res) {
-   //     angular.extend(me, {picture:res.data.url});
-        callback(null, res);
+      LocalStorage.setFacebookUserPhotoData(res);
       }
         , function (err) {
           // error
-          callback(err);
+        });
+
+          callback(null);
+        },
+        function (error) {
+          //  alert('Facebook login failed: ' + error);
+          callback(error);
         });
     }
+    // ,downloadUserData: function (callback) {
+    //   ngFB.api({ path: '/me' })
+    //     .then(function (res) {
+    // //     angular.extend(me, res);
+
+   // LocalStorage.setFacebookUserData(res);
+    //     callback(null, res);
+    //   }
+    //     , function (err) {
+    //       // error
+    //       callback(err);
+    //     });
+    // } ,
+    //  downloadUserPhotoData: function (callback) {
+    //   ngFB.api({ path: '/me/picture',
+    //     params:{
+    //       redirect:false,
+    //       height:64,
+    //       width:64
+    //     } })
+    //     .then(function (res) {
+   // //     angular.extend(me, {picture:res.data.url});
+    //   LocalStorage.setFacebookUserPhotoData(res);
+    //     callback(null, res);
+    //   }
+    //     , function (err) {
+    //       // error
+    //       callback(err);
+    //     });
+    // }
 
   };
 });
