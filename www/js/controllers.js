@@ -1,38 +1,29 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
-  .controller('LoginCtrl', function ($scope, $state, FBFactory, LocalStorage) {
+  .controller('LoginCtrl', function ($scope, $state, socketFactory, FBFactory, LocalStorage) {
   //  $scope.chat = Chats.get($stateParams.chatId);
   //alert('LOGIN CTRL');
-  console.log('--- got FBFactory --- testVal = ' + FBFactory.testVal);
-
+ // console.log('--- got FBFactory --- testVal = ' + FBFactory.testVal);
   if (LocalStorage.getFacebookUserData() != null) {
     console.log("-------->>>> " + LocalStorage.getFacebookUserData.id);
     $state.go('tab.dash');
   } else {
     console.log("user is not logged in -- ");
   }
-
+  
   $scope.fbLogin = function () {
     FBFactory.login(function (error) {
       if (!error) {
         console.log("login succesful");
         $state.go('tab.dash');
-        // FBFactory.downloadUserData(function (error, response) {
-        //   console.log('user data ' + JSON.stringify(response));
-        // });
-
-        // FBFactory.downloadUserPhotoData(function (error, response) {
-        //   console.log('user photo ' + JSON.stringify(response));
-        // });
       } else {
         console.log('login failed: ' + error);
       }
     });
-
   };
 })
-
+  
   .controller('DashCtrl', function ($scope) { })
 
   .controller('ChatsCtrl', function ($scope, Chats) {
