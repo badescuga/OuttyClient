@@ -53,9 +53,11 @@ angular.module('starter.services', ['ngOpenFB'])
   ///////////////////
   
  return {
-   testMethod : function(eventName, callback)
+   login : function(data, callback)
    {
+     socket.emit('login', function(data) {
      
+   });
    }
  }
  
