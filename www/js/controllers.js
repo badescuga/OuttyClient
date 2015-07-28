@@ -1,32 +1,32 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
-  .controller('LoginCtrl', function ($scope, $state, socketFactory, FBFactory, LocalStorage) {
+  .controller('LoginCtrl', function($scope, $state, socketFactory, FBFactory, LocalStorage) {
   //  $scope.chat = Chats.get($stateParams.chatId);
   //alert('LOGIN CTRL');
- // console.log('--- got FBFactory --- testVal = ' + FBFactory.testVal);
+ console.log('---  in LoginCTRL');
+ 
   if (LocalStorage.getFacebookUserData() != null) {
-    console.log("-------->>>> " + LocalStorage.getFacebookUserData.id);
-    $state.go('tab.dash');
+            $state.go('tab.dash'); 
   } else {
     console.log("user is not logged in -- ");
   }
   
   $scope.fbLogin = function () {
-    FBFactory.login(function (error) {
+    FBFactory.login(function(error) {
       if (!error) {
-        console.log("login succesful");
+        console.log("fb login succesful");
         $state.go('tab.dash');
       } else {
-        console.log('login failed: ' + error);
+        console.log('fb login failed: ' + error);
       }
     });
   };
 })
   
-  .controller('DashCtrl', function ($scope) { })
+  .controller('DashCtrl', function($scope) { })
 
-  .controller('ChatsCtrl', function ($scope, Chats) {
+  .controller('ChatsCtrl', function($scope, Chats) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),

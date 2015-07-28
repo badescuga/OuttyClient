@@ -1,3 +1,4 @@
+/* global io */
 angular.module('starter.services', ['ngOpenFB'])
 
   .factory('LocalStorage', function () {
@@ -20,6 +21,9 @@ angular.module('starter.services', ['ngOpenFB'])
 
   }
 })
+  .factory('GeneralManager', function () {
+    
+  })
  .factory('socket', function ($rootScope) {
   var socket = io.connect('localhost:3000');
   return {
@@ -46,10 +50,10 @@ angular.module('starter.services', ['ngOpenFB'])
 .factory('socketFactory', function (socket) {
   
  //test 
- socket.emit('init', {});
- socket.on('init', function (data) {
- console.log('on init --- from server');
-  });
+ //socket.emit('init', {});
+// socket.on('init', function (data) {
+ //console.log('on init --- from server');
+ // });
   ///////////////////
   
  return {
@@ -71,9 +75,7 @@ angular.module('starter.services', ['ngOpenFB'])
 
   console.log("init fb factory");
   return {
-    testVal: 3,
     login: function (callback) {
-
       ngFB.login({ scope: 'email,public_profile,user_friends' }).then(
         function (response) {
           console.log("facebook login succesful, response: " + JSON.stringify(response));
