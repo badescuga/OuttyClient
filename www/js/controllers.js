@@ -1,10 +1,10 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
-  .controller('LoginCtrl', function($scope, $state, socketFactory, FBFactory, LocalStorage) {
+  .controller('LoginCtrl', function($scope, $state, socketFactory, FBFactory, LocalStorage,testFactory) {
   //  $scope.chat = Chats.get($stateParams.chatId);
   //alert('LOGIN CTRL');
- console.log('---  in LoginCTRL');
+ console.log('---  in LoginCTRL, test factory '+testFactory.testVal);
  
   if (LocalStorage.getFacebookUserData() != null) {
             $state.go('tab.dash'); 

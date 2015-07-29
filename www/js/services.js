@@ -25,6 +25,7 @@ angular.module('starter.services', ['ngOpenFB'])
     
   })
  .factory('socket', function ($rootScope) {
+   //server connect
   var socket = io.connect('localhost:3000');
   return {
     on: function (eventName, callback) {
