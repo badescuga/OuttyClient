@@ -1,72 +1,5 @@
 /* global io */
 angular.module('starter.services', ['ngOpenFB'])
-
-  .factory('LocalStorage', function () {
-    
-  return {
-    setFacebookUserData: function (data) {
-      window.localStorage.setItem('facebookData', JSON.stringify(data));
-    }
-    ,
-     getFacebookUserData: function (data) {
-     return JSON.parse(window.localStorage.getItem('facebookData'));
-    }
-    ,
-    setFacebookUserPhotoData: function (data) {
-      window.localStorage.setItem('facebookPhotoData', JSON.stringify(data));
-    },
-     getFacebookUserPhotoData: function (data) {
-    return JSON.parse(window.localStorage.getItem('facebookPhotoData'));
-    }
-
-  }
-})
-  .factory('GeneralManager', function () {
-    
-  })
- .factory('socket', function ($rootScope) {
-   //server connect
-  var socket = io.connect('localhost:3000');
-  return {
-    on: function (eventName, callback) {
-      socket.on(eventName, function () {  
-        var args = arguments;
-        $rootScope.$apply(function () {
-          callback.apply(socket, args);
-        });
-      });
-    },
-    emit: function (eventName, data, callback) {
-      socket.emit(eventName, data, function () {
-        var args = arguments;
-        $rootScope.$apply(function () {
-          if (callback) {
-            callback.apply(socket, args);
-          }
-        });
-      })
-    }
-  };
-})
-.factory('socketFactory', function (socket) {
-  
- //test 
- //socket.emit('init', {});
-// socket.on('init', function (data) {
- //console.log('on init --- from server');
- // });
-  ///////////////////
-  
- return {
-   login : function(data, callback)
-   {
-     socket.emit('login', function(data) {
-     
-   });
-   }
- }
- 
-})
   .factory('FBFactory', function (ngFB, LocalStorage) {
   // Defaults to sessionStorage for storing the Facebook token 
   ngFB.init({ appId: '880420071993231' });
@@ -111,37 +44,6 @@ angular.module('starter.services', ['ngOpenFB'])
           callback(error);
         });
     }
-    // ,downloadUserData: function (callback) {
-    //   ngFB.api({ path: '/me' })
-    //     .then(function (res) {
-    // //     angular.extend(me, res);
-
-   // LocalStorage.setFacebookUserData(res);
-    //     callback(null, res);
-    //   }
-    //     , function (err) {
-    //       // error
-    //       callback(err);
-    //     });
-    // } ,
-    //  downloadUserPhotoData: function (callback) {
-    //   ngFB.api({ path: '/me/picture',
-    //     params:{
-    //       redirect:false,
-    //       height:64,
-    //       width:64
-    //     } })
-    //     .then(function (res) {
-   // //     angular.extend(me, {picture:res.data.url});
-    //   LocalStorage.setFacebookUserPhotoData(res);
-    //     callback(null, res);
-    //   }
-    //     , function (err) {
-    //       // error
-    //       callback(err);
-    //     });
-    // }
-
   };
 })
   .factory('Chats', function () {
