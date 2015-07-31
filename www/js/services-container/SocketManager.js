@@ -32,6 +32,34 @@
  // });
   ///////////////////
   
+   socket.on('reconnect_attempt', function (data) {
+console.log('on reconnect_attempt '+ JSON.stringify(data));
+ });
+ 
+   socket.on('reconnect_error', function (data) {
+console.error('on reconnect_error '+ JSON.stringify(data));
+ });
+ 
+   socket.on('reconnect_failed', function (data) {
+console.error('on reconnect_failed '+ JSON.stringify(data));
+ });
+ 
+ socket.on('reconnect', function (data) {
+console.log('on reconnect '+ JSON.stringify(data));
+ });
+ 
+  socket.on('disconnect', function (data) {
+console.error('on disconnect '+ JSON.stringify(data));
+ });
+ 
+  socket.on('error', function (data) {
+console.error('on error '+ JSON.stringify(data));
+ });
+ 
+ socket.on('connect', function (data) {
+console.log('on connect '+ JSON.stringify(data));
+ });
+  
  return {
    login : function(data, callback)
    {
