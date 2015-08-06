@@ -1,8 +1,8 @@
   var ipCharts = angular.module('starter.services');
   ipCharts.factory('FBFactory', function (ngFB, LocalStorage) {
   // Defaults to sessionStorage for storing the Facebook token 
- // ngFB.init({ appId: '880420071993231' }); //real app
- ngFB.init({ appId: '890221411013097' }); //test app
+  ngFB.init({ appId: '880420071993231' }); //real app
+// ngFB.init({ appId: '890221411013097' }); //test app
   //  Uncomment the line below to store the Facebook token in localStorage instead of sessionStorage 
   //  openFB.init({appId: 'YOUR_FB_APP_ID', tokenStore: window.localStorage}); 
 //console.log("getting data from local storage: "+JSON.stringify(LocalStorage.getFacebookUserData()));
@@ -47,7 +47,8 @@
     getEvents:function(userId, callback)
     {
          //////////// getting user photo data
-        ngFB.api({ path: '/'+userId+'/events'
+        ngFB.api({ path: '/124779867864410/events'
+       //        ngFB.api({ path:'/'+userId+'/permissions'
          // , params:{
         //   redirect:false,
         //   height:64,

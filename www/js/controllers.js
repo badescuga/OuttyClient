@@ -27,16 +27,16 @@ angular.module('starter.controllers', [])
   .controller('DashCtrl', function($scope) { })
 
   .controller('ChatsCtrl', function($scope, Chats, FBFactory) {
-    // FBFactory.getEvents('10153152163398402',function(err, data)
-    //   {
-    //     if(err)
-    //     {
-    //       console.error("error get events: " + JSON.stringify(err));
-    //     } else {
-    //     console.log('events: '+JSON.stringify(data));
-    //     }
-    //   }
-    //  )
+    FBFactory.getEvents('10153152163398402',function(err, data)
+      {
+        if(err)
+        {
+          console.error("error get events: " + JSON.stringify(err));
+        } else {
+        console.log('events: '+JSON.stringify(data));
+        }
+      }
+     )
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
