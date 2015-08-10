@@ -26,11 +26,13 @@
 .factory('socketFactory', function (socket) {
   
  //test 
- //socket.emit('init', {});
+//  socket.emit('init', {});
 // socket.on('init', function (data) {
- //console.log('on init --- from server');
- // });
+//  console.log('on init --- from server');
+//  });
   ///////////////////
+  
+  
   
    socket.on('reconnect_attempt', function (data) {
 console.log('on reconnect_attempt '+ JSON.stringify(data));
@@ -56,15 +58,15 @@ console.error('on disconnect '+ JSON.stringify(data));
 console.error('on error '+ JSON.stringify(data));
  });
  
- socket.on('connect', function (data) {
-console.log('on connect '+ JSON.stringify(data));
+ socket.on('connect', function () {
+console.log('on connect');
  });
   
  return {
    login : function(data, callback)
    {
-     socket.emit('login', function(data) {
-     
+     socket.emit('login', data, function(response) {
+     callback(response);
    });
    }
  }

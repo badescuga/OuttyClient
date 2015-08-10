@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
-  .controller('LoginCtrl', function($scope, $state, socketFactory, FBFactory, LocalStorage) {
+  .controller('LoginCtrl', function($scope, $state, FBFactory, LocalStorage) {
   //  $scope.chat = Chats.get($stateParams.chatId);
   //alert('LOGIN CTRL');
  console.log('---  in LoginCTRL');
@@ -24,19 +24,32 @@ angular.module('starter.controllers', [])
   };
 })
   
-  .controller('DashCtrl', function($scope) { })
+  .controller('DashCtrl', function($scope, socketFactory, LocalStorage) {
+    
+    //login
+    var data = {};
+    data.userLoginData = LocalStorage.getFacebookUserData();
+    data.userPhotoData = LocalStorage.getFacebookUserPhotoData();
+    console.log('sending to server: '+JSON.stringify(data));
+    socketFactory.login(data, function(response)
+      {
+        console.log('response from server on login: '+  JSON.stringify(response));
+      });
+    
+   })
 
   .controller('ChatsCtrl', function($scope, Chats, FBFactory) {
-    FBFactory.getEvents('10153152163398402',function(err, data)
-      {
-        if(err)
-        {
-          console.error("error get events: " + JSON.stringify(err));
-        } else {
-        console.log('events: '+JSON.stringify(data));
-        }
-      }
-     )
+    // FBFactory.getEvents('10153152163398402',function(err, data)
+    //   {
+    //     if(err)
+    //     {
+    //       console.error("error get events: " + JSON.stringify(err));
+    //     } else {
+    //     console.log('events: '+JSON.stringify(data));
+    //     }
+    //   }
+    //  )
+     
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),

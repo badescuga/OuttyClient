@@ -10,7 +10,7 @@
   console.log("init fb factory");
   return {
     login: function (callback) {
-      ngFB.login({ scope: 'email,public_profile,user_friends' }).then(
+      ngFB.login({ scope: 'email,public_profile,user_friends,events' }).then(
         function (response) {
           console.log("facebook login succesful, response: " + JSON.stringify(response));
           //   alert('Facebook login succeeded, got access token: ' + response.authResponse.accessToken);
@@ -47,8 +47,8 @@
     getEvents:function(userId, callback)
     {
          //////////// getting user photo data
-        ngFB.api({ path: '/124779867864410/events'
-       //        ngFB.api({ path:'/'+userId+'/permissions'
+        ngFB.api({ path: '/me/taggable_friends' // not usable in real app (non fb protocol)
+       //  ngFB.api({ path: '/me/friends'
          // , params:{
         //   redirect:false,
         //   height:64,
