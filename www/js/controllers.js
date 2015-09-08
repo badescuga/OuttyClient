@@ -5,7 +5,8 @@ angular.module('starter.controllers', [])
   //  $scope.chat = Chats.get($stateParams.chatId);
   //alert('LOGIN CTRL');
  console.log('---  in LoginCTRL');
-
+            $state.go('tab.dash'); //temp hack
+            
   if (LocalStorage.getFacebookUserData() != null) {
             $state.go('tab.dash');
   } else {
