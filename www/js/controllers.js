@@ -259,4 +259,8 @@ angular.module('starter.controllers', [])
   $scope.settings = {
     enableFriends: true
   };
-});
+
+})
+ .controller('NewChatCtrl', function ($scope) {
+   console.log('in new chat ctrl');
+  });
