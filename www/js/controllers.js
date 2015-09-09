@@ -77,7 +77,7 @@ angular.module('starter.controllers', [])
       getMessages();
 
       $timeout(function() {
-        footerBar = document.body.querySelector('#currentChat .bar-footer');
+        footerBar = document.body.querySelector('#chat-deta .bar-footer');
         scroller = document.body.querySelector('#currentChat .scroll-content');
         txtInput = angular.element(footerBar.querySelector('textarea'));
       }, 0);
