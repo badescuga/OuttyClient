@@ -6,7 +6,7 @@ angular.module('starter.controllers', [])
   //alert('LOGIN CTRL');
  console.log('---  in LoginCTRL');
             $state.go('tab.dash'); //temp hack
-            
+
   if (LocalStorage.getFacebookUserData() != null) {
             $state.go('tab.dash');
   } else {
@@ -39,7 +39,7 @@ angular.module('starter.controllers', [])
 
    })
 
-   .controller('CurrentChatCtrl', ['$scope', '$rootScope', '$state',
+   .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
   '$stateParams', 'MockService', '$ionicActionSheet',
   '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
   function($scope, $rootScope, $state, $stateParams, MockService,
@@ -250,9 +250,9 @@ angular.module('starter.controllers', [])
   }
 })
 
-  .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+//   .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
+//   $scope.chat = Chats.get($stateParams.chatId);
+// })
 
   .controller('AccountCtrl', function ($scope) {
   //  alert('daaaaa');
