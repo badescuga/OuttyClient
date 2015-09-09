@@ -11,7 +11,7 @@
 //var socketio = require("socket.io-client");
 
 
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','angularMoment'])
 
   .run(function ($ionicPlatform) {
   $ionicPlatform.ready(function () {
