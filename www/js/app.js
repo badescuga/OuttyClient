@@ -8,9 +8,6 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-//var socketio = require("socket.io-client");
-
-
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','angularMoment'])
 
   .run(function ($ionicPlatform) {

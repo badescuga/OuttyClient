@@ -25,15 +25,15 @@ angular.module('starter.controllers', [])
     };
   })
 
-  .controller('DashCtrl', function ($scope, socketFactory, LocalStorage) {
+  .controller('DashCtrl', function ($scope, RequestManager, LocalStorage) {
 
     //login
     var data = {};
     data.userLoginData = LocalStorage.getFacebookUserData();
     data.userPhotoData = LocalStorage.getFacebookUserPhotoData();
     console.log('sending to server: ' + JSON.stringify(data));
-    socketFactory.login(data, function (response) {
-      console.log('response from server on login: ' + JSON.stringify(response));
+    RequestManager.login(data, function (response) {
+   //   console.log('response from server on login: ' + JSON.stringify(response));
     });
 
   })
