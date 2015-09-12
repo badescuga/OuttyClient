@@ -19,7 +19,7 @@ angular.module('starter.controllers', [])
           console.log("fb login succesful");
           $state.go('tab.dash');
         } else {
-          console.log('fb login failed: ' + error);
+          console.log('fb login failed: ' + JSON.stringify(error));
         }
       });
     };
