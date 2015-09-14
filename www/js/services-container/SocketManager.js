@@ -81,6 +81,12 @@ ipCharts.factory('socket', function ($rootScope) {
         socket.emit('joinGroup', data, function (error, response) {
           callback(error, response);
         });
+      },
+
+      getGroupMessages: function (data, callback) {
+        socket.emit('getGroupMessages', data, function (error, response) {
+          callback(error, response);
+        });
       }
     }
 

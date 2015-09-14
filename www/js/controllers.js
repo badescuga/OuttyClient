@@ -35,8 +35,8 @@ angular.module('starter.controllers', [])
     data.fbName = fbUserData.name;
     data.fbPhotoPath = fbUserPhotoData.data.url;
     console.log('sending to server: ' + JSON.stringify(data));
-    RequestManager.login(data, function (error,response) {
-      console.log('response from server on login: '+ JSON.stringify(error)+' '+ JSON.stringify(response));
+    RequestManager.login(data, function (error, response) {
+      console.log('response from server on login: ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
       LocalStorage.setUserId(response.userId);
     });
 
@@ -44,19 +44,16 @@ angular.module('starter.controllers', [])
 
   .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
     '$stateParams', 'MockService', '$ionicActionSheet',
-    '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
-    function ($scope, $rootScope, $state, $stateParams, MockService,
-      $ionicActionSheet,
+    '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval','RequestManager',
+    function ($scope, $rootScope, $state, $stateParams, MockService, $ionicActionSheet,
       $ionicPopup, $ionicScrollDelegate, $timeout, $interval, RequestManager) {
 
-      //join the backend chat
-      console.log('joining chat');
-      var data = { groupId: $stateParams.chatId };
-      RequestManager.joinGroup(data, function (error, response) {
-        console.log('joined group :' + JSON.stringify(error) + " " + JSON.stringify(response));
-      });
-
       // mock acquiring data via $stateParams
+      $scope.toGroup = {
+        _id: $stateParams.chatId,
+        name: 'test name group'
+      }
+
       $scope.toUser = {
         _id: '534b8e5aaa5e7afc1b23e69b',
         pic: 'http://ionicframework.com/img/docs/venkman.jpg',
@@ -84,7 +81,15 @@ angular.module('starter.controllers', [])
       $scope.$on('$ionicView.enter', function () {
         console.log('UserMessages $ionicView.enter');
 
+        //join the backend chat
+        console.log('joining chat');
+        var data = { groupId: $stateParams.chatId };
+        RequestManager.joinGroup(data, function (error, response) {
+          console.log('joined group :' + JSON.stringify(error) + " " + JSON.stringify(response));
+        });
+
         getMessages();
+        getMessages2();
 
         $timeout(function () {
           footerBar = document.body.querySelector('#chat-detail .bar-footer');
@@ -113,6 +118,31 @@ angular.module('starter.controllers', [])
       });
 
       function getMessages() {
+        // the service is mock but you would probably pass the toUser's GUID here
+        MockService.getUserMessages({
+          toUserId: $scope.toUser._id
+        }).then(function (data) {
+          $scope.doneLoading = true;
+          $scope.messages = data.messages;
+
+          $timeout(function () {
+            viewScroll.scrollBottom();
+          }, 0);
+        });
+      }
+
+      function getMessages2() {
+        var data = {};
+        data.groupId = $scope.toGroup._id;
+        RequestManager.getGroupMessages(data, function (error, response) {
+          if (error) {
+            alert('error! ' + JSON.stringify(error));
+          } else {
+            console.log(' retrieved messages ' + JSON.stringify(response));
+            //response = {"entries":[],"continuationToken":null}
+          }
+
+        });
         // the service is mock but you would probably pass the toUser's GUID here
         MockService.getUserMessages({
           toUserId: $scope.toUser._id
