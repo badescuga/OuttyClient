@@ -1,3 +1,4 @@
+/* global angular */
 var ipCharts = angular.module('starter.services');
 ipCharts.factory('RequestManager', function (socketFactory) {
   return {
@@ -6,6 +7,9 @@ ipCharts.factory('RequestManager', function (socketFactory) {
     },
     createGroup: function (data, callback) {
       _createGroup(socketFactory, data, callback);
+    },
+      joinGroup: function (data, callback) {
+      _joinGroup(socketFactory, data, callback);
     },
     getGroups: function (callback) {
       _getGroups(socketFactory, callback);
@@ -28,6 +32,15 @@ function _login(socketFactory, data, callback) {
 function _createGroup(socketFactory, data, callback) {
   socketFactory.createGroup(data, function (response) {
     console.log('response from server on createGroup: ' + JSON.stringify(response));
+    if (callback) {
+      callback(response);
+    }
+  });
+}
+
+function _joinGroup(socketFactory, data, callback) {
+  socketFactory.joinGroup(data, function (response) {
+    console.log('response from server on joinGroup: ' + JSON.stringify(response));
     if (callback) {
       callback(response);
     }

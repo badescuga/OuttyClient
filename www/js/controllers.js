@@ -28,12 +28,15 @@ angular.module('starter.controllers', [])
   .controller('DashCtrl', function ($scope, RequestManager, LocalStorage) {
 
     //login
+    var fbUserData = LocalStorage.getFacebookUserData();
+    var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
     var data = {};
-    data.userLoginData = LocalStorage.getFacebookUserData();
-    data.userPhotoData = LocalStorage.getFacebookUserPhotoData();
+    data.fbId = fbUserData.id;
+    data.fbName = fbUserData.name;
+    data.fbPhotoPath = fbUserPhotoData.data.url;
     console.log('sending to server: ' + JSON.stringify(data));
     RequestManager.login(data, function (response) {
-   //   console.log('response from server on login: ' + JSON.stringify(response));
+      console.log('response from server on login: ' + JSON.stringify(response));
     });
 
   })
@@ -43,7 +46,15 @@ angular.module('starter.controllers', [])
     '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
     function ($scope, $rootScope, $state, $stateParams, MockService,
       $ionicActionSheet,
-      $ionicPopup, $ionicScrollDelegate, $timeout, $interval) {
+      $ionicPopup, $ionicScrollDelegate, $timeout, $interval, RequestManager) {
+
+        //join the backend chat
+      console.log('joining chat');
+      var data = {groupId: $stateParams.chatId};
+      RequestManager.joinGroup(data, function(error, response)
+      {
+        console.log('joined group :'+JSON.stringify(error) +" "+JSON.stringify(response));
+      });
 
       // mock acquiring data via $stateParams
       $scope.toUser = {
@@ -260,10 +271,15 @@ angular.module('starter.controllers', [])
     };
 
   })
-  .controller('NewChatCtrl', function ($scope) {
+  .controller('NewChatCtrl', function ($scope,RequestManager) {
     console.log('in new chat ctrl');
 
     $scope.createGroup = function () {
       console.log("!!!!!!!!!!!!!!!!! " + $scope.createGroup.groupName);
+      var data = {name: $scope.createGroup.groupName};
+      RequestManager.createGroup(data, function(error, response)
+      {
+        console.log('created group :'+JSON.stringify(error) +" "+JSON.stringify(response));
+      });
     }
   });
