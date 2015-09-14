@@ -35,8 +35,9 @@ angular.module('starter.controllers', [])
     data.fbName = fbUserData.name;
     data.fbPhotoPath = fbUserPhotoData.data.url;
     console.log('sending to server: ' + JSON.stringify(data));
-    RequestManager.login(data, function (response) {
-      console.log('response from server on login: ' + JSON.stringify(response));
+    RequestManager.login(data, function (error,response) {
+      console.log('response from server on login: '+ JSON.stringify(error)+' '+ JSON.stringify(response));
+      LocalStorage.setUserId(response.userId);
     });
 
   })

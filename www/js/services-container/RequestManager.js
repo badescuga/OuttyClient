@@ -21,46 +21,46 @@ ipCharts.factory('RequestManager', function (socketFactory) {
 });
 
 function _login(socketFactory, data, callback) {
-  socketFactory.login(data, function (response) {
-    console.log('response from server on login: ' + JSON.stringify(response));
+  socketFactory.login(data, function (error,response) {
+    console.log('response from server on login: '+ JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
-      callback(response);
+      callback(error, response);
     }
   });
 }
 
 function _createGroup(socketFactory, data, callback) {
-  socketFactory.createGroup(data, function (response) {
-    console.log('response from server on createGroup: ' + JSON.stringify(response));
+  socketFactory.createGroup(data, function (error,response) {
+    console.log('response from server on createGroup: '+ JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
-      callback(response);
+      callback(error, response);
     }
   });
 }
 
 function _joinGroup(socketFactory, data, callback) {
-  socketFactory.joinGroup(data, function (response) {
-    console.log('response from server on joinGroup: ' + JSON.stringify(response));
+  socketFactory.joinGroup(data, function (error, response) {
+    console.log('response from server on joinGroup: '+ JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
-      callback(response);
+      callback(error, response);
     }
   });
 }
 
 function _getGroups(socketFactory, callback) {
-  socketFactory.getGroups(function (response) {
-    console.log('response from server on getGroups: ' + JSON.stringify(response));
+  socketFactory.getGroups(function (error, response) {
+    console.log('response from server on getGroups: ' + JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
-      callback(response);
+      callback(error, response);
     }
   });
 }
 
 function _getGroupMessages(socketFactory, data, callback) {
-  socketFactory.getGroupMessages(data, function (response) {
-    console.log('response from server on getGroupMessages: ' + JSON.stringify(response));
+  socketFactory.getGroupMessages(data, function (error, response) {
+    console.log('response from server on getGroupMessages: ' + JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
-      callback(response);
+      callback(error, response);
     }
   });
 }

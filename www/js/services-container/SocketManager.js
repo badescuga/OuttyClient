@@ -68,18 +68,18 @@ ipCharts.factory('socket', function ($rootScope) {
 
     return {
       login: function (data, callback) {
-        socket.emit('login', data, function (response) {
-          callback(response);
+        socket.emit('login', data, function (error, response) {
+          callback(error, response);
         });
       },
       createGroup: function (data, callback) {
-        socket.emit('createGroup', data, function (response) {
-          callback(response);
+        socket.emit('createGroup', data, function (error, response) {
+          callback(error, response);
         });
       },
       joinGroup: function (data, callback) {
-        socket.emit('joinGroup', data, function (response) {
-          callback(response);
+        socket.emit('joinGroup', data, function (error, response) {
+          callback(error, response);
         });
       }
     }
