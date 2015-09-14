@@ -82,7 +82,11 @@ ipCharts.factory('socket', function ($rootScope) {
           callback(error, response);
         });
       },
-
+  getGroups: function (callback) {
+        socket.emit('getGroups', null, function (error, response) {
+          callback(error, response);
+        });
+      },
       getGroupMessages: function (data, callback) {
         socket.emit('getGroupMessages', data, function (error, response) {
           callback(error, response);

@@ -44,7 +44,7 @@ angular.module('starter.controllers', [])
 
   .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
     '$stateParams', 'MockService', '$ionicActionSheet',
-    '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval','RequestManager',
+    '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval', 'RequestManager',
     function ($scope, $rootScope, $state, $stateParams, MockService, $ionicActionSheet,
       $ionicPopup, $ionicScrollDelegate, $timeout, $interval, RequestManager) {
 
@@ -131,6 +131,7 @@ angular.module('starter.controllers', [])
         });
       }
 
+      //badescuga get messages
       function getMessages2() {
         var data = {};
         data.groupId = $scope.toGroup._id;
@@ -264,7 +265,29 @@ angular.module('starter.controllers', [])
       });
 
     }])
-  .controller('ChatsCtrl', function ($scope, Chats, FBFactory) {
+  .controller('ChatsCtrl', function ($scope, Chats, FBFactory, LocalStorage, RequestManager) {
+
+    RequestManager.getGroups(function (error, response) {
+      if (!error) {
+        //     console.log('aaa7777 '+JSON.stringify(response));
+        var groups = response;
+        var chats = [];
+
+        groups.forEach(function (item) {
+          var chat = {};
+          chat.id = item.PartitionKey._;
+          chat.name = "name: " + chat.id;
+          chat.lastText = "no last text";
+          chat.face = "https://avatars3.githubusercontent.com/u/11214?v=3&s=460";
+
+          chats.push(chat);
+        });
+        console.log('chats '+JSON.stringify(chats));
+      $scope.chats = chats;
+      } else {
+        console.log('error: ' + JSON.stringify(error));
+      }
+    });
     // FBFactory.getEvents('10153152163398402',function(err, data)
     //   {
     //     if(err)
@@ -284,7 +307,7 @@ angular.module('starter.controllers', [])
     //$scope.$on('$ionicView.enter', function(e) {
     //});
 
-    $scope.chats = Chats.all();
+   // $scope.chats = Chats.all();
     $scope.remove = function (chat) {
       Chats.remove(chat);
     }
