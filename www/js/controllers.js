@@ -48,12 +48,11 @@ angular.module('starter.controllers', [])
       $ionicActionSheet,
       $ionicPopup, $ionicScrollDelegate, $timeout, $interval, RequestManager) {
 
-        //join the backend chat
+      //join the backend chat
       console.log('joining chat');
-      var data = {groupId: $stateParams.chatId};
-      RequestManager.joinGroup(data, function(error, response)
-      {
-        console.log('joined group :'+JSON.stringify(error) +" "+JSON.stringify(response));
+      var data = { groupId: $stateParams.chatId };
+      RequestManager.joinGroup(data, function (error, response) {
+        console.log('joined group :' + JSON.stringify(error) + " " + JSON.stringify(response));
       });
 
       // mock acquiring data via $stateParams
@@ -271,15 +270,14 @@ angular.module('starter.controllers', [])
     };
 
   })
-  .controller('NewChatCtrl', function ($scope,RequestManager) {
+  .controller('NewChatCtrl', function ($scope, RequestManager) {
     console.log('in new chat ctrl');
 
     $scope.createGroup = function () {
       console.log("!!!!!!!!!!!!!!!!! " + $scope.createGroup.groupName);
-      var data = {name: $scope.createGroup.groupName};
-      RequestManager.createGroup(data, function(error, response)
-      {
-        console.log('created group :'+JSON.stringify(error) +" "+JSON.stringify(response));
+      var data = { name: $scope.createGroup.groupName };
+      RequestManager.createGroup(data, function (error, response) {
+        console.log('created group :' + JSON.stringify(error) + " " + JSON.stringify(response));
       });
     }
   });

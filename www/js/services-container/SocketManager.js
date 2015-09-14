@@ -62,6 +62,10 @@ ipCharts.factory('socket', function ($rootScope) {
       console.log('on connect');
     });
 
+    socket.on('receivedMessage', function(data){
+      alert('received message!: '+JSON.stringify(data));
+    });
+
     return {
       login: function (data, callback) {
         socket.emit('login', data, function (response) {
