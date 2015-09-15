@@ -45,9 +45,9 @@ angular.module('starter.controllers', [])
   .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
     '$stateParams', 'MockService', '$ionicActionSheet',
     '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
-    'socketFactory', 'RequestManager','_',
+    'socketFactory', 'RequestManager', '_', 'LocalStorage',
     function ($scope, $rootScope, $state, $stateParams, MockService, $ionicActionSheet,
-      $ionicPopup, $ionicScrollDelegate, $timeout, $interval , socketFactory, RequestManager, _) {
+      $ionicPopup, $ionicScrollDelegate, $timeout, $interval, socketFactory, RequestManager, _, LocalStorage) {
 
 
 
@@ -59,17 +59,17 @@ angular.module('starter.controllers', [])
 
       // this could be on $rootScope rather than in $stateParams
       $scope.user = {
-        _id: '534b8fb2aa5e7afc1b23e69c',
+        _id: LocalStorage.getUserId(),
         pic: 'http://ionicframework.com/img/docs/mcfly.jpg',
-        username: 'Marty'
+        username: 'Me'
       };
 
 
-      $scope.toUser = {
-        _id: '534b8e5aaa5e7afc1b23e69b',
-        pic: 'http://ionicframework.com/img/docs/venkman.jpg',
-        username: 'Venkman'
-      }
+      // $scope.toUser = {
+      //   _id: '534b8e5aaa5e7afc1b23e69b',
+      //   pic: 'http://ionicframework.com/img/docs/venkman.jpg',
+      //   username: 'Venkman'
+      // }
 
 
       $scope.input = {
@@ -88,7 +88,7 @@ angular.module('starter.controllers', [])
 
         //event handler for new message received
 
-        $scope.messages = {};
+        //       $scope.messages = {};
         socketFactory.addMessageReceivedHandler(_.bind(function (message) {
           console.log('adding message ' + JSON.stringify(message));
           $scope.messages.push(message);
@@ -103,7 +103,7 @@ angular.module('starter.controllers', [])
           console.log('joined group :' + JSON.stringify(error) + ", " + JSON.stringify(response));
         });
 
-        getMessages();
+        //  getMessages();
 
         //badescuga
         getMessages2();
@@ -134,19 +134,19 @@ angular.module('starter.controllers', [])
         }
       });
 
-      function getMessages() {
-        // the service is mock but you would probably pass the toUser's GUID here
-        MockService.getUserMessages({
-          toUserId: $scope.toUser._id
-        }).then(function (data) {
-          $scope.doneLoading = true;
-          $scope.messages = data.messages;
+      // function getMessages() {
+      //   // the service is mock but you would probably pass the toUser's GUID here
+      //   MockService.getUserMessages({
+      //     toUserId: $scope.toUser._id
+      //   }).then(function (data) {
+      //     $scope.doneLoading = true;
+      //     $scope.messages = data.messages;
 
-          $timeout(function () {
-            viewScroll.scrollBottom();
-          }, 0);
-        });
-      }
+      //     $timeout(function () {
+      //       viewScroll.scrollBottom();
+      //     }, 0);
+      //   });
+      // }
 
       //badescuga get messages
       function getMessages2() {
@@ -157,21 +157,27 @@ angular.module('starter.controllers', [])
             alert('error! ' + JSON.stringify(error));
           } else {
             console.log(' retrieved messages ' + JSON.stringify(response));
+            $scope.doneLoading = true;
+            $scope.messages = response.entries;
+
+            $timeout(function () {
+              viewScroll.scrollBottom();
+            }, 0);
             //response = {"entries":[],"continuationToken":null}
           }
 
         });
         // the service is mock but you would probably pass the toUser's GUID here
-        MockService.getUserMessages({
-          toUserId: $scope.toUser._id
-        }).then(function (data) {
-          $scope.doneLoading = true;
-          $scope.messages = data.messages;
+        // MockService.getUserMessages({
+        //   toUserId: $scope.toUser._id
+        // }).then(function (data) {
+        //   $scope.doneLoading = true;
+        //   $scope.messages = data.messages;
 
-          $timeout(function () {
-            viewScroll.scrollBottom();
-          }, 0);
-        });
+        //   $timeout(function () {
+        //     viewScroll.scrollBottom();
+        //   }, 0);
+        // });
       }
 
       $scope.$watch('input.message', function (newValue, oldValue) {
