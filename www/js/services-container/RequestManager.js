@@ -14,6 +14,9 @@ ipCharts.factory('RequestManager', function (socketFactory) {
     getGroups: function (callback) {
       _getGroups(socketFactory, callback);
     },
+      sendMessage: function (callback) {
+      _sendMessage(socketFactory, callback);
+    },
     getGroupMessages: function (data, callback) {
       _getGroupMessages(socketFactory, data, callback);
     }
@@ -32,6 +35,15 @@ function _login(socketFactory, data, callback) {
 function _createGroup(socketFactory, data, callback) {
   socketFactory.createGroup(data, function (error,response) {
     console.log('response from server on createGroup: '+ JSON.stringify(error)+" " + JSON.stringify(response));
+    if (callback) {
+      callback(error, response);
+    }
+  });
+}
+
+function _sendMessage(socketFactory, data, callback) {
+  socketFactory.sendMessage(data, function (error, response) {
+    console.log('response from server on sendMessage: '+ JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
       callback(error, response);
     }

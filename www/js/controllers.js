@@ -44,20 +44,17 @@ angular.module('starter.controllers', [])
 
   .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
     '$stateParams', 'MockService', '$ionicActionSheet',
-    '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval', 'RequestManager',
+    '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
+    'socketFactory', 'RequestManager','_',
     function ($scope, $rootScope, $state, $stateParams, MockService, $ionicActionSheet,
-      $ionicPopup, $ionicScrollDelegate, $timeout, $interval, RequestManager) {
+      $ionicPopup, $ionicScrollDelegate, $timeout, $interval , socketFactory, RequestManager, _) {
 
-      // mock acquiring data via $stateParams
-      $scope.toGroup = {
+
+
+      // mock acquiring data via $stateParams badescuga
+      $scope.Group = {
         _id: $stateParams.chatId,
         name: 'test name group'
-      }
-
-      $scope.toUser = {
-        _id: '534b8e5aaa5e7afc1b23e69b',
-        pic: 'http://ionicframework.com/img/docs/venkman.jpg',
-        username: 'Venkman'
       }
 
       // this could be on $rootScope rather than in $stateParams
@@ -67,8 +64,16 @@ angular.module('starter.controllers', [])
         username: 'Marty'
       };
 
+
+      $scope.toUser = {
+        _id: '534b8e5aaa5e7afc1b23e69b',
+        pic: 'http://ionicframework.com/img/docs/venkman.jpg',
+        username: 'Venkman'
+      }
+
+
       $scope.input = {
-        message: localStorage['userMessage-' + $scope.toUser._id] || ''
+        message: localStorage['userMessage-' + $scope.Group._id] || ''
       };
 
       var messageCheckTimer;
@@ -81,14 +86,26 @@ angular.module('starter.controllers', [])
       $scope.$on('$ionicView.enter', function () {
         console.log('UserMessages $ionicView.enter');
 
+        //event handler for new message received
+
+        $scope.messages = {};
+        socketFactory.addMessageReceivedHandler(_.bind(function (message) {
+          console.log('adding message ' + JSON.stringify(message));
+          $scope.messages.push(message);
+          keepKeyboardOpen();
+          viewScroll.scrollBottom(true);
+        }));
+
         //join the backend chat
         console.log('joining chat');
         var data = { groupId: $stateParams.chatId };
         RequestManager.joinGroup(data, function (error, response) {
-          console.log('joined group :' + JSON.stringify(error) + " " + JSON.stringify(response));
+          console.log('joined group :' + JSON.stringify(error) + ", " + JSON.stringify(response));
         });
 
         getMessages();
+
+        //badescuga
         getMessages2();
 
         $timeout(function () {
@@ -134,7 +151,7 @@ angular.module('starter.controllers', [])
       //badescuga get messages
       function getMessages2() {
         var data = {};
-        data.groupId = $scope.toGroup._id;
+        data.groupId = $scope.Group._id;
         RequestManager.getGroupMessages(data, function (error, response) {
           if (error) {
             alert('error! ' + JSON.stringify(error));
@@ -160,13 +177,18 @@ angular.module('starter.controllers', [])
       $scope.$watch('input.message', function (newValue, oldValue) {
         console.log('input.message $watch, newValue ' + newValue);
         if (!newValue) newValue = '';
-        localStorage['userMessage-' + $scope.toUser._id] = newValue;
+        localStorage['userMessage-' + $scope.Group._id] = newValue;
       });
 
       $scope.sendMessage = function (sendMessageForm) {
+        // var message = {
+        //   toId: $scope.toUser._id,
+        //   text: $scope.input.message
+        // };
         var message = {
-          toId: $scope.toUser._id,
-          text: $scope.input.message
+          groupId: $scope.Group._id,
+          message: $scope.input.message,
+          type: 'text'
         };
 
         // if you do a web service call this will be needed as well as before the viewScroll calls
@@ -174,29 +196,54 @@ angular.module('starter.controllers', [])
         // for some reason the one time blur event is not firing in the browser but does on devices
         keepKeyboardOpen();
 
-        //MockService.sendMessage(message).then(function(data) {
-        $scope.input.message = '';
+        //////// badescuga
+        // //MockService.sendMessage(message).then(function(data) {
+        // $scope.input.message = '';
 
-        message._id = new Date().getTime(); // :~)
-        message.date = new Date();
-        message.username = $scope.user.username;
-        message.userId = $scope.user._id;
-        message.pic = $scope.user.picture;
+        // message._id = new Date().getTime(); // :~)
+        // message.date = new Date();
+        // message.username = $scope.user.username;
+        // message.userId = $scope.user._id;
+        // message.pic = $scope.user.picture;
 
-        $scope.messages.push(message);
+        // $scope.messages.push(message);
 
-        $timeout(function () {
-          keepKeyboardOpen();
-          viewScroll.scrollBottom(true);
-        }, 0);
+        // $timeout(function () {
+        //   keepKeyboardOpen();
+        //   viewScroll.scrollBottom(true);
+        // }, 0);
 
-        $timeout(function () {
-          $scope.messages.push(MockService.getMockMessage());
-          keepKeyboardOpen();
-          viewScroll.scrollBottom(true);
-        }, 2000);
+        // $timeout(function () {
+        //   $scope.messages.push(MockService.getMockMessage());
+        //   keepKeyboardOpen();
+        //   viewScroll.scrollBottom(true);
+        // }, 2000);
 
-        //});
+        // //});
+
+        RequestManager.sendMessage(message, function (error, response) {
+          $scope.input.message = '';
+
+          // message._id = response.RowKey._;
+          // message.date = response.Timestamp._;
+          // message.username = response.userId._;
+          // message.userId = response.userId._;
+          // message.pic = response.fbPhotoPath._;
+
+          // $scope.messages.push(message);
+
+          $timeout(function () {
+            keepKeyboardOpen();
+            viewScroll.scrollBottom(true);
+          }, 0);
+
+          $timeout(function () {
+            $scope.messages.push(MockService.getMockMessage());
+            keepKeyboardOpen();
+            viewScroll.scrollBottom(true);
+          }, 2000);
+
+        });
       };
 
       // this keeps the keyboard open on a device only after sending a message, it is non obtrusive
@@ -267,27 +314,7 @@ angular.module('starter.controllers', [])
     }])
   .controller('ChatsCtrl', function ($scope, Chats, FBFactory, LocalStorage, RequestManager) {
 
-    RequestManager.getGroups(function (error, response) {
-      if (!error) {
-        //     console.log('aaa7777 '+JSON.stringify(response));
-        var groups = response;
-        var chats = [];
 
-        groups.forEach(function (item) {
-          var chat = {};
-          chat.id = item.PartitionKey._;
-          chat.name = "name: " + chat.id;
-          chat.lastText = "no last text";
-          chat.face = "https://avatars3.githubusercontent.com/u/11214?v=3&s=460";
-
-          chats.push(chat);
-        });
-        console.log('chats '+JSON.stringify(chats));
-      $scope.chats = chats;
-      } else {
-        console.log('error: ' + JSON.stringify(error));
-      }
-    });
     // FBFactory.getEvents('10153152163398402',function(err, data)
     //   {
     //     if(err)
@@ -304,10 +331,33 @@ angular.module('starter.controllers', [])
     // To listen for when this page is active (for example, to refresh data),
     // listen for the $ionicView.enter event:
     //
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
+    $scope.$on('$ionicView.enter', function (e) {
 
-   // $scope.chats = Chats.all();
+      //loading chats views
+      RequestManager.getGroups(function (error, response) {
+        if (!error) {
+          //     console.log('aaa7777 '+JSON.stringify(response));
+          var groups = response;
+          var chats = [];
+
+          groups.forEach(function (item) {
+            var chat = {};
+            chat.id = item.PartitionKey._;
+            chat.name = "name: " + chat.id;
+            chat.lastText = "no last text";
+            chat.face = "https://avatars3.githubusercontent.com/u/11214?v=3&s=460";
+
+            chats.push(chat);
+          });
+          console.log('chats ' + JSON.stringify(chats));
+          $scope.chats = chats;
+        } else {
+          console.log('error: ' + JSON.stringify(error));
+        }
+      });
+    });
+
+    // $scope.chats = Chats.all();
     $scope.remove = function (chat) {
       Chats.remove(chat);
     }

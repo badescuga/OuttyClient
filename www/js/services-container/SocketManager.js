@@ -32,7 +32,7 @@ ipCharts.factory('socket', function ($rootScope) {
     //  });
     ///////////////////
 
-
+    var _onMessageReceivedHandler = [];
 
     socket.on('reconnect_attempt', function (data) {
       console.log('on reconnect_attempt ' + JSON.stringify(data));
@@ -62,13 +62,27 @@ ipCharts.factory('socket', function ($rootScope) {
       console.log('on connect');
     });
 
-    socket.on('receivedMessage', function(data){
-      alert('received message!: '+JSON.stringify(data));
+    socket.on('receivedMessage', function (data) {
+      console.log('received message!: ' + JSON.stringify(data));
+      if (_onMessageReceivedHandler.length > 0) {
+        _onMessageReceivedHandler.forEach(function (item) {
+          item(data);
+        });
+      }
     });
 
     return {
+      addMessageReceivedHandler: function (callback) {
+        _onMessageReceivedHandler.push(callback);
+        console.log("!!!!!!!!!!!!!!!!!!!! no. of received message handlers: " + _onMessageReceivedHandler.length);
+      },
       login: function (data, callback) {
         socket.emit('login', data, function (error, response) {
+          callback(error, response);
+        });
+      },
+      sendMessage: function (data, callback) {
+        socket.emit('sendMessage', data, function (error, response) {
           callback(error, response);
         });
       },
@@ -82,7 +96,7 @@ ipCharts.factory('socket', function ($rootScope) {
           callback(error, response);
         });
       },
-  getGroups: function (callback) {
+      getGroups: function (callback) {
         socket.emit('getGroups', null, function (error, response) {
           callback(error, response);
         });

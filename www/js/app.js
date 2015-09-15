@@ -1,3 +1,4 @@
+/* global application */
 /* global cordova */
 /* global angular */
 // Ionic Starter App
@@ -9,7 +10,9 @@
 // 'starter.controllers' is found in controllers.js
 
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','angularMoment'])
-
+.constant('_',
+    window._
+)
   .run(function ($ionicPlatform) {
   $ionicPlatform.ready(function () {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -101,6 +104,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','a
  $urlRouterProvider.otherwise('/login');
 
 });
+
 
 // var sio = require('../../socket.io-client');
 // console.log(sio === null ? "NULL":"NU E NULL");
