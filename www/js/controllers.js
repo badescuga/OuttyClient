@@ -1,7 +1,7 @@
 /* global angular */
 angular.module('starter.controllers', [])
 
-  .controller('LoginCtrl', function ($scope, $state, FBFactory, LocalStorage) {
+  .controller('LoginCtrl', function ($scope, $state, FBFactory, LocalStorage, RequestManager, _) {
     //  $scope.chat = Chats.get($stateParams.chatId);
     //alert('LOGIN CTRL');
     console.log('---  in LoginCTRL');
@@ -17,7 +17,23 @@ angular.module('starter.controllers', [])
       FBFactory.login(function (error) {
         if (!error) {
           console.log("fb login succesful");
-          $state.go('tab.dash');
+          //starting login
+          var fbUserData = LocalStorage.getFacebookUserData();
+          var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
+
+          console.log('!!! '+ JSON.stringify(fbUserData)+ ' '+JSON.stringify(fbUserPhotoData));
+          var self = this;
+          var data = {};
+          data.fbId = fbUserData.id;
+          data.fbName = fbUserData.name;
+          data.fbPhotoPath = fbUserPhotoData.data.url;
+          console.log('sending to server: ' + JSON.stringify(data));
+          RequestManager.login(data, _.bind(function (error, response) {
+            console.log('response from server on login(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+            LocalStorage.setUserId(response.userId);
+            $state.go('tab.dash');
+          }));
+
         } else {
           console.log('fb login failed: ' + JSON.stringify(error));
         }
@@ -27,18 +43,18 @@ angular.module('starter.controllers', [])
 
   .controller('DashCtrl', function ($scope, RequestManager, LocalStorage) {
 
-    //login
-    var fbUserData = LocalStorage.getFacebookUserData();
-    var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
-    var data = {};
-    data.fbId = fbUserData.id;
-    data.fbName = fbUserData.name;
-    data.fbPhotoPath = fbUserPhotoData.data.url;
-    console.log('sending to server: ' + JSON.stringify(data));
-    RequestManager.login(data, function (error, response) {
-      console.log('response from server on login: ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
-      LocalStorage.setUserId(response.userId);
-    });
+    // //login
+    // var fbUserData = LocalStorage.getFacebookUserData();
+    // var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
+    // var data = {};
+    // data.fbId = fbUserData.id;
+    // data.fbName = fbUserData.name;
+    // data.fbPhotoPath = fbUserPhotoData.data.url;
+    // console.log('sending to server: ' + JSON.stringify(data));
+    // RequestManager.login(data, function (error, response) {
+    //   console.log('response from server on login: ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+    //   LocalStorage.setUserId(response.userId);
+    // });
 
   })
 
@@ -88,7 +104,7 @@ angular.module('starter.controllers', [])
 
         //event handler for new message received
 
-        //       $scope.messages = {};
+        // $scope.messages = {};
         socketFactory.addMessageReceivedHandler(_.bind(function (message) {
           console.log('adding message ' + JSON.stringify(message));
           $scope.messages.push(message);

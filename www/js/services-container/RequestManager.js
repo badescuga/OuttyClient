@@ -3,7 +3,7 @@ var ipCharts = angular.module('starter.services');
 ipCharts.factory('RequestManager', function (socketFactory) {
   return {
     login: function (data, callback) {
-      _login(socketFactory, data, callback);
+      __login(socketFactory, data, callback);
     },
     createGroup: function (data, callback) {
       _createGroup(socketFactory, data, callback);
@@ -23,7 +23,7 @@ ipCharts.factory('RequestManager', function (socketFactory) {
   }
 });
 
-function _login(socketFactory, data, callback) {
+function __login(socketFactory, data, callback) {
   socketFactory.login(data, function (error,response) {
     console.log('response from server on login: '+ JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {

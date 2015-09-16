@@ -19,11 +19,7 @@
         ngFB.api({ path: '/me' })
         .then(function (res) {
      LocalStorage.setFacebookUserData(res);
-      }
-        , function (err) {
-          // error
-        });
-        //////////// getting user photo data
+       //////////// getting user photo data
         ngFB.api({ path: '/me/picture',
         params:{
           redirect:false,
@@ -32,15 +28,24 @@
         } })
         .then(function (res) {
       LocalStorage.setFacebookUserPhotoData(res);
+      callback(null);
       }
         , function (err) {
           // error
+          callback(err);
+        });
+      }
+        , function (err) {
+          // error
+          console.error(JSON.stringify(err));
+          callback(err);
         });
 
-          callback(null);
+
+
         },
         function (error) {
-          //  alert('Facebook login failed: ' + error);
+          console.error('Facebook login failed: ' + error);
           callback(error);
         });
     },

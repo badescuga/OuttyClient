@@ -23,7 +23,7 @@ ipCharts.factory('socket', function ($rootScope) {
     }
   };
 })
-  .factory('socketFactory', function (socket) {
+  .factory('socketFactory', function ($state, socket, LocalStorage) {
 
     //test
     //  socket.emit('init', {});
@@ -60,6 +60,23 @@ ipCharts.factory('socket', function ($rootScope) {
 
     socket.on('connect', function () {
       console.log('on connect');
+      //login
+      var fbUserData = LocalStorage.getFacebookUserData();
+      var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
+      if (fbUserData && fbUserPhotoData) {
+        var data = {};
+        data.fbId = fbUserData.id;
+        data.fbName = fbUserData.name;
+        data.fbPhotoPath = fbUserPhotoData.data.url;
+        console.log('sending to server: ' + JSON.stringify(data));
+        _login(socket, data, function (error, response) {
+          console.log('response from server on login: ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+          LocalStorage.setUserId(response.userId);
+        });
+      } else {
+        console.error('user didnt login with fb yet; go to home to do so');
+        $state.go('login');
+      }
     });
 
     socket.on('receivedMessage', function (data) {
@@ -77,9 +94,10 @@ ipCharts.factory('socket', function ($rootScope) {
         console.log("!!!!!!!!!!!!!!!!!!!! no. of received message handlers: " + _onMessageReceivedHandler.length);
       },
       login: function (data, callback) {
-        socket.emit('login', data, function (error, response) {
-          callback(error, response);
-        });
+        // socket.emit('login', data, function (error, response) {
+        //   callback(error, response);
+        // });
+        _login(socket, data, callback);
       },
       sendMessage: function (data, callback) {
         socket.emit('sendMessage', data, function (error, response) {
@@ -109,3 +127,9 @@ ipCharts.factory('socket', function ($rootScope) {
     }
 
   });
+
+function _login(socket, data, callback) {
+  socket.emit('login', data, function (error, response) {
+    callback(error, response);
+  });
+};
