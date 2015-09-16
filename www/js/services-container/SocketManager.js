@@ -99,6 +99,11 @@ ipCharts.factory('socket', function ($rootScope) {
         // });
         _login(socket, data, callback);
       },
+      getUsersInfoFromChats: function (data, callback) {
+        socket.emit('getUsersInfoFromChats', data, function (error, response) {
+          callback(error, response);
+        });
+      },
       sendMessage: function (data, callback) {
         socket.emit('sendMessage', data, function (error, response) {
           callback(error, response);

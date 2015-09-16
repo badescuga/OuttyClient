@@ -19,6 +19,9 @@ ipCharts.factory('RequestManager', function (socketFactory) {
     },
     getGroupMessages: function (data, callback) {
       _getGroupMessages(socketFactory, data, callback);
+    },
+    getUsersInfoFromChats: function(data, callback) {
+     _getUsersInfoFromChats(socketFactory, data, callback);
     }
   }
 });
@@ -26,6 +29,15 @@ ipCharts.factory('RequestManager', function (socketFactory) {
 function __login(socketFactory, data, callback) {
   socketFactory.login(data, function (error,response) {
     console.log('response from server on login: '+ JSON.stringify(error)+" " + JSON.stringify(response));
+    if (callback) {
+      callback(error, response);
+    }
+  });
+}
+
+function _getUsersInfoFromChats(socketFactory, data, callback) {
+  socketFactory.getUsersInfoFromChats(data, function (error,response) {
+    console.log('response from server on get users info from chats: '+ JSON.stringify(error)+" " + JSON.stringify(response));
     if (callback) {
       callback(error, response);
     }

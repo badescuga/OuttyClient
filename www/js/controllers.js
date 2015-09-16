@@ -43,6 +43,7 @@ angular.module('starter.controllers', [])
 
   .controller('DashCtrl', function ($scope, RequestManager, LocalStorage) {
 
+
     // //login
     // var fbUserData = LocalStorage.getFacebookUserData();
     // var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
@@ -389,11 +390,18 @@ angular.module('starter.controllers', [])
 //   $scope.chat = Chats.get($stateParams.chatId);
 // })
 
-  .controller('AccountCtrl', function ($scope) {
+  .controller('AccountCtrl', function ($scope, LocalStorage, RequestManager) {
     //  alert('daaaaa');
     $scope.settings = {
       enableFriends: true
     };
+
+    var data = {};
+data.userId = LocalStorage.getUserId();
+console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+ RequestManager.getUsersInfoFromChats(data, _.bind(function (error, response) {
+            console.log('response from server on getUsersInfoFromChats(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+          }));
 
   })
   .controller('NewChatCtrl', function ($scope, RequestManager) {
