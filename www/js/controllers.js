@@ -16,23 +16,24 @@ angular.module('starter.controllers', [])
     $scope.fbLogin = function () {
       FBFactory.login(function (error) {
         if (!error) {
-          console.log("fb login succesful");
-          //starting login
-          var fbUserData = LocalStorage.getFacebookUserData();
-          var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
+          RequestManager.initData(true);
+          // console.log("fb login succesful");
+          // //starting login
+          // var fbUserData = LocalStorage.getFacebookUserData();
+          // var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
 
-          console.log('!!! '+ JSON.stringify(fbUserData)+ ' '+JSON.stringify(fbUserPhotoData));
-          var self = this;
-          var data = {};
-          data.fbId = fbUserData.id;
-          data.fbName = fbUserData.name;
-          data.fbPhotoPath = fbUserPhotoData.data.url;
-          console.log('sending to server: ' + JSON.stringify(data));
-          RequestManager.login(data, _.bind(function (error, response) {
-            console.log('response from server on login(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
-            LocalStorage.setUserId(response.userId);
-            $state.go('tab.dash');
-          }));
+          // console.log('!!! ' + JSON.stringify(fbUserData) + ' ' + JSON.stringify(fbUserPhotoData));
+
+          // var data = {};
+          // data.fbId = fbUserData.id;
+          // data.fbName = fbUserData.name;
+          // data.fbPhotoPath = fbUserPhotoData.data.url;
+          // console.log('sending to server: ' + JSON.stringify(data));
+          // RequestManager.login(data, _.bind(function (error, response) {
+          //   console.log('response from server on login(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+          //   LocalStorage.setUserId(response.userId);
+          //   $state.go('tab.dash');
+          // }));
 
         } else {
           console.log('fb login failed: ' + JSON.stringify(error));
@@ -395,14 +396,6 @@ angular.module('starter.controllers', [])
     $scope.settings = {
       enableFriends: true
     };
-
-    var data = {};
-data.userId = LocalStorage.getUserId();
-console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
- RequestManager.getUsersInfoFromChats(data, _.bind(function (error, response) {
-            console.log('response from server on getUsersInfoFromChats(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
-          }));
-
   })
   .controller('NewChatCtrl', function ($scope, RequestManager) {
     console.log('in new chat ctrl');

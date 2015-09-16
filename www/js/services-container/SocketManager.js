@@ -60,23 +60,7 @@ ipCharts.factory('socket', function ($rootScope) {
 
     socket.on('connect', function () {
       console.log('on connect');
-      //login
-      var fbUserData = LocalStorage.getFacebookUserData();
-      var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
-      if (fbUserData && fbUserPhotoData) {
-        var data = {};
-        data.fbId = fbUserData.id;
-        data.fbName = fbUserData.name;
-        data.fbPhotoPath = fbUserPhotoData.data.url;
-        console.log('sending to server: ' + JSON.stringify(data));
-        _login(socket, data, function (error, response) {
-          console.log('response from server on login: ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
-          LocalStorage.setUserId(response.userId);
-        });
-      } else {
-        console.error('user didnt login with fb yet; go to home to do so');
-        $state.go('login');
-      }
+      _initData(socket, LocalStorage, $state, false);
     });
 
     socket.on('receivedMessage', function (data) {
@@ -100,9 +84,7 @@ ipCharts.factory('socket', function ($rootScope) {
         _login(socket, data, callback);
       },
       getUsersInfoFromChats: function (data, callback) {
-        socket.emit('getUsersInfoFromChats', data, function (error, response) {
-          callback(error, response);
-        });
+        _getUsersInfoFromChats(socket, data, callback);
       },
       sendMessage: function (data, callback) {
         socket.emit('sendMessage', data, function (error, response) {
@@ -128,13 +110,65 @@ ipCharts.factory('socket', function ($rootScope) {
         socket.emit('getGroupMessages', data, function (error, response) {
           callback(error, response);
         });
+      },
+      initData: function (goToDashboard) {
+        _initData(socket, LocalStorage, $state, goToDashboard);
       }
     }
 
   });
 
+
+function _initData(socket, LocalStorage, $state, goToDashboard) {
+  //login
+  var fbUserData = LocalStorage.getFacebookUserData();
+  var fbUserPhotoData = LocalStorage.getFacebookUserPhotoData();
+  if (fbUserData && fbUserPhotoData) {
+    var data = {};
+    data.fbId = fbUserData.id;
+    data.fbName = fbUserData.name;
+    data.fbPhotoPath = fbUserPhotoData.data.url;
+    console.log('sending to server: ' + JSON.stringify(data));
+    _login(socket, data, function (error, response) {
+      console.log('response from server on login: ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+      LocalStorage.setUserId(response.userId);
+
+      //if go to dashboard, (when coming from fb login)
+      if (goToDashboard) {
+        $state.go('tab.dash');
+      }
+        //pull groups users data (fbName, fbPhotoUrl, etc.)
+        var data = {};
+        data.userId = LocalStorage.getUserId();
+        if (data.userId) {
+          console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
+          _getUsersInfoFromChats(socket, data, _.bind(function (error, response) {
+            console.log('response from server on getUsersInfoFromChats(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+            if (!error) {
+              LocalStorage.setUsersDetails(response);
+            } else {
+              console.error(JSON.stringify(error));
+            }
+          }));
+        }
+
+    });
+  } else {
+    console.error('user didnt login with fb yet; go to home to do so');
+    $state.go('login');
+  }
+
+
+}
+
 function _login(socket, data, callback) {
   socket.emit('login', data, function (error, response) {
+    callback(error, response);
+  });
+};
+
+function _getUsersInfoFromChats(socket, data, callback) {
+  socket.emit('getUsersInfoFromChats', data, function (error, response) {
     callback(error, response);
   });
 };

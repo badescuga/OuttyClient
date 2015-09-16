@@ -21,7 +21,12 @@
     },
      getFacebookUserPhotoData: function () {
     return JSON.parse(window.localStorage.getItem('facebookPhotoData'));
+    },
+    setUsersDetails: function (data) {
+      window.localStorage.setItem('setUsersDetails', JSON.stringify(data));
+    },
+     getUsersDetails: function () {
+    return JSON.parse(window.localStorage.getItem('setUsersDetails'));
     }
-
   }
 });
