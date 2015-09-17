@@ -68,6 +68,12 @@ angular.module('starter.controllers', [])
       $ionicPopup, $ionicScrollDelegate, $timeout, $interval, socketFactory, RequestManager, _, LocalStorage) {
 
 
+      $scope.getUserData = function (userId) {
+        var usersDetails = LocalStorage.getUsersDetails();
+        var rslt = (usersDetails[userId] != null ? usersDetails[userId] : userId);
+   //     console.log('==>>> '+JSON.stringify(rslt));
+        return rslt;
+      }
 
       // mock acquiring data via $stateParams badescuga
       $scope.Group = {
