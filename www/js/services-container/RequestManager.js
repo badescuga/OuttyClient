@@ -25,6 +25,9 @@ ipCharts.factory('RequestManager', function (socketFactory) {
     },
     initData: function(goToDashboard) {
       socketFactory.initData(goToDashboard);
+    }, 
+    removeUserFromGroup:function(data, callback) {
+      socketFactory.removeUserFromGroup(data, callback);
     }
   }
 });

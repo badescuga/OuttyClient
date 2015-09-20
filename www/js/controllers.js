@@ -71,7 +71,7 @@ angular.module('starter.controllers', [])
       $scope.getUserData = function (userId) {
         var usersDetails = LocalStorage.getUsersDetails();
         var rslt = (usersDetails[userId] != null ? usersDetails[userId] : userId);
-   //     console.log('==>>> '+JSON.stringify(rslt));
+        //     console.log('==>>> '+JSON.stringify(rslt));
         return rslt;
       }
 
@@ -96,9 +96,9 @@ angular.module('starter.controllers', [])
       // }
 
 
-      $scope.input = {
-        message: localStorage['userMessage-' + $scope.Group._id] || ''
-      };
+      //$scope.input = {
+      //  message: localStorage['userMessage-' + $scope.Group._id] || ''
+      //};
 
       var messageCheckTimer;
 
@@ -153,9 +153,9 @@ angular.module('starter.controllers', [])
       });
 
       $scope.$on('$ionicView.beforeLeave', function () {
-        if (!$scope.input.message || $scope.input.message === '') {
-          localStorage.removeItem('userMessage-' + $scope.toUser._id);
-        }
+        //   if (!$scope.input.message || $scope.input.message === '') {
+        //     localStorage.removeItem('userMessage-' + $scope.toUser._id);
+        //   }
       });
 
       // function getMessages() {
@@ -206,8 +206,8 @@ angular.module('starter.controllers', [])
 
       $scope.$watch('input.message', function (newValue, oldValue) {
         console.log('input.message $watch, newValue ' + newValue);
-        if (!newValue) newValue = '';
-        localStorage['userMessage-' + $scope.Group._id] = newValue;
+        // if (!newValue) newValue = '';
+        // localStorage['userMessage-' + $scope.Group._id] = newValue;
       });
 
       $scope.sendMessage = function (sendMessageForm) {
@@ -342,7 +342,7 @@ angular.module('starter.controllers', [])
       });
 
     }])
-  .controller('ChatsCtrl', function ($scope, Chats, FBFactory, LocalStorage, RequestManager) {
+  .controller('ChatsCtrl', function ($scope, Chats, FBFactory, LocalStorage, RequestManager, _) {
 
 
     // FBFactory.getEvents('10153152163398402',function(err, data)
@@ -387,10 +387,26 @@ angular.module('starter.controllers', [])
       });
     });
 
-    // $scope.chats = Chats.all();
     $scope.remove = function (chat) {
-      Chats.remove(chat);
-    }
+
+      var self = this;
+      //send to server to remove user 
+      RequestManager.removeUserFromGroup({ groupId: chat.id }, function (error, resp) {
+        if (error) {
+          alert('eroare : ' + JSON.stringify(error));
+        } else {
+          console.log(' user removed from chat! yey! ' + JSON.stringify(resp));
+          //remove chat
+          console.log('----- ' + JSON.stringify($scope.chats));
+          //  _.without($scope.chats, chat);
+          var id = $scope.chats.indexOf(chat);
+          $scope.chats.splice(id, 1);
+          console.log('ID: ' + id);
+          console.log('-----< ' + JSON.stringify($scope.chats));
+        }
+      });
+
+    };
   })
 
 //   .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {

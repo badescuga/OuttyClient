@@ -113,6 +113,11 @@ ipCharts.factory('socket', function ($rootScope) {
       },
       initData: function (goToDashboard) {
         _initData(socket, LocalStorage, $state, goToDashboard);
+      },
+      removeUserFromGroup: function(data, callback) {
+           socket.emit('removeUserFromGroup', data, function (error, response) {
+          callback(error, response);
+        });
       }
     }
 
