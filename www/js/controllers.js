@@ -397,12 +397,8 @@ angular.module('starter.controllers', [])
         } else {
           console.log(' user removed from chat! yey! ' + JSON.stringify(resp));
           //remove chat
-          console.log('----- ' + JSON.stringify($scope.chats));
-          //  _.without($scope.chats, chat);
           var id = $scope.chats.indexOf(chat);
           $scope.chats.splice(id, 1);
-          console.log('ID: ' + id);
-          console.log('-----< ' + JSON.stringify($scope.chats));
         }
       });
 
