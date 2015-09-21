@@ -60,16 +60,23 @@ angular.module('starter.controllers', [])
 
   })
 
-  .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$state',
-    '$stateParams', 'MockService', '$ionicActionSheet',
+  .controller('ChatDetailCtrl', ['$scope', '$rootScope', '$ionicSideMenuDelegate', '$state',
+    '$stateParams', '$ionicActionSheet',
     '$ionicPopup', '$ionicScrollDelegate', '$timeout', '$interval',
     'socketFactory', 'RequestManager', '_', 'LocalStorage',
-    function ($scope, $rootScope, $state, $stateParams, MockService, $ionicActionSheet,
+    function ($scope, $rootScope, $ionicSideMenuDelegate, $state, $stateParams, $ionicActionSheet,
       $ionicPopup, $ionicScrollDelegate, $timeout, $interval, socketFactory, RequestManager, _, LocalStorage) {
 
 
+      var initData = LocalStorage.getInitData();
+
+      $scope.toggleRight = function () {
+        console.log('toggleRight -- ');
+        $ionicSideMenuDelegate.toggleRight();
+      };
+
       $scope.getUserData = function (userId) {
-        var usersDetails = LocalStorage.getUsersDetails();
+        var usersDetails = initData.usersCompleteData;
         var rslt = (usersDetails[userId] != null ? usersDetails[userId] : userId);
         //     console.log('==>>> '+JSON.stringify(rslt));
         return rslt;
@@ -78,7 +85,7 @@ angular.module('starter.controllers', [])
       // mock acquiring data via $stateParams badescuga
       $scope.Group = {
         _id: $stateParams.chatId,
-        name: 'test name group'
+        name: initData.groupsDetailedData[$stateParams.chatId].name._
       }
 
       // this could be on $rootScope rather than in $stateParams
@@ -262,16 +269,16 @@ angular.module('starter.controllers', [])
 
           // $scope.messages.push(message);
 
-          $timeout(function () {
-            keepKeyboardOpen();
-            viewScroll.scrollBottom(true);
-          }, 0);
+          // $timeout(function () {
+          //   keepKeyboardOpen();
+          //   viewScroll.scrollBottom(true);
+          // }, 0);
 
-          $timeout(function () {
-            $scope.messages.push(MockService.getMockMessage());
-            keepKeyboardOpen();
-            viewScroll.scrollBottom(true);
-          }, 2000);
+          // $timeout(function () {
+          //   $scope.messages.push(MockService.getMockMessage());
+          //   keepKeyboardOpen();
+          //   viewScroll.scrollBottom(true);
+          // }, 2000);
 
         });
       };
@@ -369,11 +376,13 @@ angular.module('starter.controllers', [])
           //     console.log('aaa7777 '+JSON.stringify(response));
           var groups = response;
           var chats = [];
+          var initData = LocalStorage.getInitData();
+
 
           groups.forEach(function (item) {
             var chat = {};
             chat.id = item.PartitionKey._;
-            chat.name = "name: " + chat.id;
+            chat.name = initData.groupsDetailedData[chat.id].name._;
             chat.lastText = "no last text";
             chat.face = "https://avatars3.githubusercontent.com/u/11214?v=3&s=460";
 
@@ -390,7 +399,7 @@ angular.module('starter.controllers', [])
     $scope.remove = function (chat) {
 
       var self = this;
-      //send to server to remove user 
+      //send to server to remove user
       RequestManager.removeUserFromGroup({ groupId: chat.id }, function (error, resp) {
         if (error) {
           alert('eroare : ' + JSON.stringify(error));

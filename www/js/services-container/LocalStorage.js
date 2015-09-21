@@ -22,11 +22,11 @@
      getFacebookUserPhotoData: function () {
     return JSON.parse(window.localStorage.getItem('facebookPhotoData'));
     },
-    setUsersDetails: function (data) {
-      window.localStorage.setItem('usersDetails', JSON.stringify(data));
+     setInitData: function (data) {
+      window.localStorage.setItem('initData', JSON.stringify(data));
     },
-     getUsersDetails: function () {
-    return JSON.parse(window.localStorage.getItem('usersDetails'));
+     getInitData: function () {
+    return JSON.parse(window.localStorage.getItem('initData'));
     }
   }
-}); 
+});

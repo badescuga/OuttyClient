@@ -147,10 +147,10 @@ function _initData(socket, LocalStorage, $state, goToDashboard) {
         data.userId = LocalStorage.getUserId();
         if (data.userId) {
           console.log(">>>>>>>>>>>>>>>>>>>>>>>>>>");
-          _getUsersInfoFromChats(socket, data, _.bind(function (error, response) {
-            console.log('response from server on getUsersInfoFromChats(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
+          _getInitData(socket, data, _.bind(function (error, response) {
+            console.log('response from server on getInitData(controllers.js): ' + JSON.stringify(error) + ' ' + JSON.stringify(response));
             if (!error) {
-              LocalStorage.setUsersDetails(response);
+              LocalStorage.setInitData(response);
             } else {
               console.error(JSON.stringify(error));
             }
@@ -172,8 +172,8 @@ function _login(socket, data, callback) {
   });
 };
 
-function _getUsersInfoFromChats(socket, data, callback) {
-  socket.emit('getUsersInfoFromChats', data, function (error, response) {
+function _getInitData(socket, data, callback) {
+  socket.emit('getInitData', data, function (error, response) {
     callback(error, response);
   });
 };
